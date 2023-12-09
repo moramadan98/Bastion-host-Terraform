@@ -6,13 +6,8 @@ resource "aws_instance" "bastion1" {
   vpc_security_group_ids      = [aws_security_group.allow_ssh.id] # reference the security group created earlier
   subnet_id                   = aws_subnet.pub-sub-1.id
   associate_public_ip_address = "true" # to get public ip
-  key_name                    = "tf_key"
-  user_data                   = <<-EOF
-              #!/bin/bash
-              echo $(aws secretsmanager get-secret-value --secret-id key --query SecretString --output text) > /home/ec2-user/tf_key.pem 
-              chown ec2-user:ec2-user tf_key.pem
-              chmod 400 /home/ec2-user/tf_key.pem
-              EOF
+  key_name                    = aws_key_pair.tf-public-key.key_name
+
 
   tags = {
     Name = "Bastion Host 1"
@@ -27,14 +22,7 @@ resource "aws_instance" "bastion2" {
   vpc_security_group_ids      = [aws_security_group.allow_ssh.id] # reference the security group created earlier
   subnet_id                   = aws_subnet.pub-sub-2.id
   associate_public_ip_address = "true" # to get public ip
-
-  key_name  = "tf_key"
-  user_data = <<-EOF
-              #!/bin/bash
-              echo $(aws secretsmanager get-secret-value --secret-id key --query SecretString --output text) > /home/ec2-user/tf_key.pem 
-              chown ec2-user:ec2-user tf_key.pem
-              chmod 400 /home/ec2-user/tf_key.pem
-              EOF
+  key_name                    = aws_key_pair.tf-public-key.key_name
 
   tags = {
     Name = "Bastion Host 2"
@@ -48,13 +36,7 @@ resource "aws_instance" "application1" {
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.allow_ssh_3000.id] # reference the security group created earlier
   subnet_id              = aws_subnet.pri-sub-1.id
-  key_name                    = "tf_key"
-  user_data                   = <<-EOF
-              #!/bin/bash
-              echo $(aws secretsmanager get-secret-value --secret-id key --query SecretString --output text) > /home/ec2-user/tf_key.pem 
-              chown ec2-user:ec2-user tf_key.pem
-              chmod 400 /home/ec2-user/tf_key.pem
-              EOF
+  key_name               = aws_key_pair.tf-public-key.key_name
   tags = {
     Name = "application Host 1"
   }
@@ -67,13 +49,7 @@ resource "aws_instance" "application2" {
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.allow_ssh_3000.id] # reference the security group created earlier
   subnet_id              = aws_subnet.pri-sub-2.id
-  key_name                    = "tf_key"
-  user_data                   = <<-EOF
-              #!/bin/bash
-              echo $(aws secretsmanager get-secret-value --secret-id key --query SecretString --output text) > /home/ec2-user/tf_key.pem 
-              chown ec2-user:ec2-user tf_key.pem
-              chmod 400 /home/ec2-user/tf_key.pem
-              EOF
+  key_name               = aws_key_pair.tf-public-key.key_name
   tags = {
     Name = "application Host 2"
   }
