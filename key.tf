@@ -2,7 +2,7 @@
 # genrate key pair
 resource "tls_private_key" "key_genrator" {
   algorithm = "RSA"
-  rsa_bits  = 2048
+  rsa_bits  = 4096
 }
 
 
@@ -15,7 +15,7 @@ resource "aws_key_pair" "tf-public-key" {
 
 # save private key in local (in project dir)
 
-# resource "local_file" "tf-private-key" {
-# content  = tls_private_key.key_genrator.private_key_pem
-# filename = "tf_key.pem"
-# }
+resource "local_file" "tf-private-key" {
+  content  = tls_private_key.key_genrator.private_key_pem
+  filename = "tf_key.pem"
+}
